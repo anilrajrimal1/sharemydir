@@ -9,7 +9,19 @@ import io
 import urllib.parse
 import zipfile
 import qrcode_terminal
-from datetime import datetime
+import datetime
+
+# Terminal colors (simple ANSI codes)
+class TermColors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 def get_local_ip():
     try:
@@ -50,7 +62,6 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         super().do_GET()
 
     def create_zip_in_memory(self, folder_path):
-        """Create a ZIP archive of the folder in memory and return bytes."""
         mem_zip = io.BytesIO()
         with zipfile.ZipFile(mem_zip, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
             for root, dirs, files in os.walk(folder_path):
@@ -62,43 +73,103 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         return mem_zip.read()
 
     def list_directory(self, path):
-        """Override directory listing to add [Download ZIP] links."""
+        """Override directory listing to present a prettier HTML table with info."""
         try:
-            list = os.listdir(path)
+            entries = os.listdir(path)
         except OSError:
             self.send_error(404, "No permission to list directory")
             return None
 
-        list.sort(key=lambda a: a.lower())
-        r = []
+        entries.sort(key=lambda a: a.lower())
         displaypath = urllib.parse.unquote(self.path)
-        r.append(f'<!DOCTYPE html>\n<html>\n<head>\n<title>Directory listing for {displaypath}</title>\n')
-        r.append('<meta charset="utf-8">')
-        r.append('</head>\n<body>\n')
-        r.append(f'<h2>Directory listing for {displaypath}</h2>\n')
-        r.append('<hr>\n<ul>\n')
+
+        # HTML + CSS
+        r = []
+        r.append(f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Directory listing for {displaypath}</title>
+<style>
+  body {{ font-family: Arial, sans-serif; background: #f9f9f9; color: #333; padding: 20px; }}
+  h2 {{ color: #444; }}
+  table {{ border-collapse: collapse; width: 100%; max-width: 900px; }}
+  th, td {{ text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }}
+  tr:hover {{ background-color: #f1f1f1; }}
+  th {{ background-color: #4CAF50; color: white; }}
+  a {{ color: #007bff; text-decoration: none; }}
+  a:hover {{ text-decoration: underline; }}
+  .icon {{ font-weight: bold; margin-right: 5px; }}
+  .folder {{ color: #ffa500; }}
+  .file {{ color: #555; }}
+  .download-btn {{
+    background-color: #28a745;
+    color: white;
+    padding: 4px 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }}
+  .download-btn:hover {{
+    background-color: #218838;
+  }}
+</style>
+</head>
+<body>
+<h2>Directory listing for {displaypath}</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Size</th>
+      <th>Last Modified</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>''')
 
         # Parent directory link
         if displaypath != "/":
             parent = os.path.dirname(displaypath.rstrip('/'))
             if not parent.endswith('/'):
                 parent += '/'
-            r.append(f'<li><a href="{parent}">.. (parent directory)</a></li>\n')
+            r.append(f'<tr><td colspan="4"><a href="{parent}">⬆️ Parent Directory</a></td></tr>')
 
-        for name in list:
+        for name in entries:
             fullname = os.path.join(path, name)
-            display_name = link_name = name
-            if os.path.isdir(fullname):
-                display_name = name + "/"
-                link_name = name + "/"
-                # Add download zip link next to folder
-                zip_link = urllib.parse.quote(link_name) + "?zip=1"
-                r.append(f'<li><a href="{link_name}">{display_name}</a> '
-                         f'- <a href="{zip_link}">[Download ZIP]</a></li>\n')
-            else:
-                r.append(f'<li><a href="{urllib.parse.quote(link_name)}">{display_name}</a></li>\n')
+            display_name = urllib.parse.quote(name)
+            stat = os.stat(fullname)
+            mod_time = datetime.datetime.fromtimestamp(stat.st_mtime).strftime('%Y-%m-%d %H:%M:%S')
 
-        r.append('</ul>\n<hr>\n</body>\n</html>\n')
+            if os.path.isdir(fullname):
+                size_display = "-"
+                icon = '<span class="icon folder">📁</span>'
+                # Download zip link for folder
+                zip_link = urllib.parse.quote(name) + "/?zip=1"
+                r.append(f'<tr>'
+                         f'<td>{icon}<a href="{display_name}/">{name}/</a></td>'
+                         f'<td>{size_display}</td>'
+                         f'<td>{mod_time}</td>'
+                         f'<td><a href="{zip_link}" class="download-btn">Download ZIP</a></td>'
+                         f'</tr>')
+            else:
+                size_display = sizeof_fmt(stat.st_size)
+                icon = '<span class="icon file">📄</span>'
+                r.append(f'<tr>'
+                         f'<td>{icon}<a href="{display_name}">{name}</a></td>'
+                         f'<td>{size_display}</td>'
+                         f'<td>{mod_time}</td>'
+                         f'<td></td>'
+                         f'</tr>')
+
+        r.append('''
+  </tbody>
+</table>
+<hr>
+<footer style="font-size: 0.9em; color: #666;">serveme &copy; 2025</footer>
+</body>
+</html>''')
+
         encoded = '\n'.join(r).encode('utf-8', 'surrogateescape')
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -106,21 +177,35 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
         return io.BytesIO(encoded)
 
+def sizeof_fmt(num, suffix="B"):
+    # human-readable file size
+    for unit in ["","K","M","G","T","P","E","Z"]:
+        if abs(num) < 1024.0:
+            return f"{num:3.1f} {unit}{suffix}"
+        num /= 1024.0
+    return f"{num:.1f} Y{suffix}"
+
 class ReusableTCPServer(socketserver.TCPServer):
     allow_reuse_address = True
 
 def serve(directory, port):
     os.chdir(directory)
     handler = DownloadableHTTPRequestHandler
+
+    # CLI UI output with color & box
+    local_ip = get_local_ip()
+    url = f"http://{local_ip}:{port}/"
+    folder_path = os.path.abspath(directory)
+
+    # Pretty CLI display
+    print(TermColors.OKGREEN + "┌" + "─" * 50 + "┐" + TermColors.ENDC)
+    print(TermColors.OKGREEN + f"│ Serving folder: {TermColors.BOLD}{folder_path}".ljust(50) + " │" + TermColors.ENDC)
+    print(TermColors.OKGREEN + f"│ URL: {TermColors.UNDERLINE}{url}".ljust(50) + " │" + TermColors.ENDC)
+    print(TermColors.OKGREEN + f"│ Scan this QR code for mobile access:".ljust(50) + " │" + TermColors.ENDC)
+    print(TermColors.OKGREEN + "└" + "─" * 50 + "┘" + TermColors.ENDC)
+    qrcode_terminal.draw(url)
+
     with ReusableTCPServer(("", port), handler) as httpd:
-        local_ip = get_local_ip()
-        url = f"http://{local_ip}:{port}/"
-
-        print(f"Serving {os.path.abspath(directory)} at:")
-        print(f"  {url}\n")
-        print("Scan this QR code to open on your mobile device:\n")
-        qrcode_terminal.draw(url)
-
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
