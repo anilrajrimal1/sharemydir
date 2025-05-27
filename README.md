@@ -16,6 +16,8 @@
 
 Effortlessly serve any folder over HTTP with **zero configuration**, featuring a mobile-friendly web interface, QR code access, and downloadable folders as ZIP files. Perfect for developers, testers, and anyone needing to share files quickly.
 
+![serveme-demo](https://github.com/user-attachments/assets/5ffc6de2-8e5e-4461-b7cf-9ab7b8c22651)
+
 ## Features
 
 - **Instant HTTP Server**: Serve any folder with a single command.
