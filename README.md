@@ -1,18 +1,10 @@
-
-       .__                                           .___.__        
-  _____|  |__ _____ _______   ____   _____ ___.__. __| _/|__|______ 
- /  ___/  |  \\__  \\_  __ \_/ __ \ /     <   |  |/ __ | |  \_  __ \
- \___ \|   Y  \/ __ \|  | \/\  ___/|  Y Y  \___  / /_/ | |  ||  | \/
-/____  >___|  (____  /__|    \___  >__|_|  / ____\____ | |__||__|   
-     \/     \/     \/            \/      \/\/         \/            
-         
+# sharemydir
+        
 ![PyPI](https://img.shields.io/pypi/v/sharemydir?color=blue)
 ![Python Version](https://img.shields.io/pypi/pyversions/sharemydir)
 ![License](https://img.shields.io/github/license/anilrajrimal1/sharemydir?color=green)
 ![GitHub Release](https://img.shields.io/github/v/release/anilrajrimal1/sharemydir?color=purple)
 ![Downloads](https://img.shields.io/pypi/dm/sharemydir?color=orange)
-
-# sharemydir
 
 Effortlessly serve any folder over HTTP with **zero configuration**, featuring a mobile-friendly web interface, QR code access, and downloadable folders as ZIP files. Perfect for developers, testers, and anyone needing to share files quickly.
 
