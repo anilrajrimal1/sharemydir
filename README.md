@@ -1,22 +1,20 @@
-          
-                                                           
-            ______ ______________  __ ____   _____   ____  
-           /  ___// __ \_  __ \  \/ // __ \ /     \_/ __ \ 
-           \___ \\  ___/|  | \/\   /\  ___/|  Y Y  \  ___/ 
-          /____  >\___  >__|    \_/  \___  >__|_|  /\___  >
-               \/     \/                 \/      \/     \/ 
-          
-![PyPI](https://img.shields.io/pypi/v/serveme?color=blue)
-![Python Version](https://img.shields.io/pypi/pyversions/serveme)
-![License](https://img.shields.io/github/license/anilrajrimal1/serveme?color=green)
-![GitHub Release](https://img.shields.io/github/v/release/anilrajrimal1/serveme?color=purple)
-![Downloads](https://img.shields.io/pypi/dm/serveme?color=orange)
 
-# serveme
+       .__                                           .___.__        
+  _____|  |__ _____ _______   ____   _____ ___.__. __| _/|__|______ 
+ /  ___/  |  \\__  \\_  __ \_/ __ \ /     <   |  |/ __ | |  \_  __ \
+ \___ \|   Y  \/ __ \|  | \/\  ___/|  Y Y  \___  / /_/ | |  ||  | \/
+/____  >___|  (____  /__|    \___  >__|_|  / ____\____ | |__||__|   
+     \/     \/     \/            \/      \/\/         \/            
+         
+![PyPI](https://img.shields.io/pypi/v/sharemydir?color=blue)
+![Python Version](https://img.shields.io/pypi/pyversions/sharemydir)
+![License](https://img.shields.io/github/license/anilrajrimal1/sharemydir?color=green)
+![GitHub Release](https://img.shields.io/github/v/release/anilrajrimal1/sharemydir?color=purple)
+![Downloads](https://img.shields.io/pypi/dm/sharemydir?color=orange)
+
+# sharemydir
 
 Effortlessly serve any folder over HTTP with **zero configuration**, featuring a mobile-friendly web interface, QR code access, and downloadable folders as ZIP files. Perfect for developers, testers, and anyone needing to share files quickly.
-
-![serveme-demo](https://github.com/user-attachments/assets/5ffc6de2-8e5e-4461-b7cf-9ab7b8c22651)
 
 ## Features
 
@@ -31,17 +29,17 @@ Effortlessly serve any folder over HTTP with **zero configuration**, featuring a
 
 ## Installation
 
-Install `serveme` directly from PyPI:
+Install `sharemydir` directly from PyPI:
 
 ```bash
-pip install serveme
+pip install sharemydir
 ```
 
 Alternatively, clone the repository for development:
 
 ```bash
-git clone https://github.com/anilrajrimal1/serveme.git
-cd serveme
+git clone https://github.com/anilrajrimal1/sharemydir.git
+cd sharemydir
 ```
 ### Dependencies
 
@@ -55,20 +53,20 @@ cd serveme
 Serve the current directory:
 
 ```bash
-serveme
+sharemydir
 ```
 
 Serve a specific folder on a custom port:
 
 ```bash
-serveme /path/to/folder -p 9000
+sharemydir /path/to/folder -p 9000
 ```
 
 ### Example Output
 
 ```text
 +------------------------------------------------------------+
-| Serving folder: /home/anil/demo/serveme-demo               |
+| Serving folder: /home/anil/demo/sharemydir-demo               |
 | URL: http://192.168.1.42:9000/                             |
 | Scan this QR code for mobile access:                       |
 +------------------------------------------------------------+
@@ -98,7 +96,7 @@ Stop the server cleanly with `Ctrl+C`.
 To run locally for development:
 
 ```bash
-python serveme.py
+python sharemydir.py
 ```
 
 ### Contributing
@@ -113,10 +111,10 @@ We welcome contributions! To get started:
 
 ## Releases
 
-Check out the [Releases](https://github.com/anilrajrimal1/serveme/releases) page for the latest updates, changelogs, and version history.
+Check out the [Releases](https://github.com/anilrajrimal1/sharemydir/releases) page for the latest updates, changelogs, and version history.
 
-- **Latest Release**: [v1.0.0](https://github.com/anilrajrimal1/serveme/releases/latest)
-- Available on [PyPI](https://pypi.org/project/serveme/).
+- **Latest Release**: [v1.0.0](https://github.com/anilrajrimal1/sharemydir/releases/latest)
+- Available on [PyPI](https://pypi.org/project/sharemydir/).
 
 ## License
 

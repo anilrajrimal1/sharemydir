@@ -212,7 +212,7 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 </table>
 </main>
 <footer>
-serveme &copy; 2025
+sharemydir &copy; 2025
 </footer>
 </body>
 </html>''')
