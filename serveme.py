@@ -11,7 +11,6 @@ import zipfile
 import qrcode_terminal
 import datetime
 
-# Terminal colors (simple ANSI codes)
 class TermColors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -39,7 +38,7 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         fs_path = self.translate_path(path)
 
-        # If folder requested with ?zip=1, serve zipped folder
+        # Serve zipped folder if requested
         if os.path.isdir(fs_path) and query.get("zip", ["0"])[0] == "1":
             try:
                 zip_data = self.create_zip_in_memory(fs_path)
@@ -58,7 +57,7 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(zip_data)
             return
 
-        # Otherwise default handler for files and folders
+        # Otherwise default
         super().do_GET()
 
     def create_zip_in_memory(self, folder_path):
@@ -73,7 +72,6 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         return mem_zip.read()
 
     def list_directory(self, path):
-        """Override directory listing to present a prettier HTML table with info."""
         try:
             entries = os.listdir(path)
         except OSError:
@@ -83,7 +81,6 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         entries.sort(key=lambda a: a.lower())
         displaypath = urllib.parse.unquote(self.path)
 
-        # HTML + CSS
         r = []
         r.append(f'''<!DOCTYPE html>
 <html lang="en">
@@ -91,17 +88,57 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 <meta charset="utf-8">
 <title>Directory listing for {displaypath}</title>
 <style>
-  body {{ font-family: Arial, sans-serif; background: #f9f9f9; color: #333; padding: 20px; }}
-  h2 {{ color: #444; }}
-  table {{ border-collapse: collapse; width: 100%; max-width: 900px; }}
-  th, td {{ text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }}
-  tr:hover {{ background-color: #f1f1f1; }}
-  th {{ background-color: #4CAF50; color: white; }}
-  a {{ color: #007bff; text-decoration: none; }}
-  a:hover {{ text-decoration: underline; }}
-  .icon {{ font-weight: bold; margin-right: 5px; }}
-  .folder {{ color: #ffa500; }}
-  .file {{ color: #555; }}
+  html, body {{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #f9f9f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+  }}
+  body > main {{
+    flex-grow: 1;
+    padding: 20px;
+  }}
+  h2 {{
+    color: #444;
+  }}
+  table {{
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 900px;
+  }}
+  th, td {{
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }}
+  tr:hover {{
+    background-color: #f1f1f1;
+  }}
+  th {{
+    background-color: #4CAF50;
+    color: white;
+  }}
+  a {{
+    color: #007bff;
+    text-decoration: none;
+  }}
+  a:hover {{
+    text-decoration: underline;
+  }}
+  .icon {{
+    font-weight: bold;
+    margin-right: 5px;
+  }}
+  .folder {{
+    color: #ffa500;
+  }}
+  .file {{
+    color: #555;
+  }}
   .download-btn {{
     background-color: #28a745;
     color: white;
@@ -113,9 +150,17 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
   .download-btn:hover {{
     background-color: #218838;
   }}
+  footer {{
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 0.9em;
+    color: #666;
+    background: #eee;
+  }}
 </style>
 </head>
 <body>
+<main>
 <h2>Directory listing for {displaypath}</h2>
 <table>
   <thead>
@@ -128,7 +173,6 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
   </thead>
   <tbody>''')
 
-        # Parent directory link
         if displaypath != "/":
             parent = os.path.dirname(displaypath.rstrip('/'))
             if not parent.endswith('/'):
@@ -144,7 +188,6 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             if os.path.isdir(fullname):
                 size_display = "-"
                 icon = '<span class="icon folder">📁</span>'
-                # Download zip link for folder
                 zip_link = urllib.parse.quote(name) + "/?zip=1"
                 r.append(f'<tr>'
                          f'<td>{icon}<a href="{display_name}/">{name}/</a></td>'
@@ -155,18 +198,22 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             else:
                 size_display = sizeof_fmt(stat.st_size)
                 icon = '<span class="icon file">📄</span>'
+                # Add download button for files linking to file URL directly
+                file_link = urllib.parse.quote(name)
                 r.append(f'<tr>'
-                         f'<td>{icon}<a href="{display_name}">{name}</a></td>'
+                         f'<td>{icon}<a href="{file_link}">{name}</a></td>'
                          f'<td>{size_display}</td>'
                          f'<td>{mod_time}</td>'
-                         f'<td></td>'
+                         f'<td><a href="{file_link}" class="download-btn">Download</a></td>'
                          f'</tr>')
 
         r.append('''
   </tbody>
 </table>
-<hr>
-<footer style="font-size: 0.9em; color: #666;">serveme &copy; 2025</footer>
+</main>
+<footer>
+serveme &copy; 2025
+</footer>
 </body>
 </html>''')
 
@@ -178,7 +225,6 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         return io.BytesIO(encoded)
 
 def sizeof_fmt(num, suffix="B"):
-    # human-readable file size
     for unit in ["","K","M","G","T","P","E","Z"]:
         if abs(num) < 1024.0:
             return f"{num:3.1f} {unit}{suffix}"
@@ -192,17 +238,17 @@ def serve(directory, port):
     os.chdir(directory)
     handler = DownloadableHTTPRequestHandler
 
-    # CLI UI output with color & box
     local_ip = get_local_ip()
     url = f"http://{local_ip}:{port}/"
     folder_path = os.path.abspath(directory)
 
-    # Pretty CLI display
-    print(TermColors.OKGREEN + "┌" + "─" * 50 + "┐" + TermColors.ENDC)
-    print(TermColors.OKGREEN + f"│ Serving folder: {TermColors.BOLD}{folder_path}".ljust(50) + " │" + TermColors.ENDC)
-    print(TermColors.OKGREEN + f"│ URL: {TermColors.UNDERLINE}{url}".ljust(50) + " │" + TermColors.ENDC)
-    print(TermColors.OKGREEN + f"│ Scan this QR code for mobile access:".ljust(50) + " │" + TermColors.ENDC)
-    print(TermColors.OKGREEN + "└" + "─" * 50 + "┘" + TermColors.ENDC)
+    # Fix CLI table width and align columns nicely
+    col_width = 60
+    print(TermColors.OKGREEN + "┌" + "─" * col_width + "┐" + TermColors.ENDC)
+    print(TermColors.OKGREEN + f"│ Serving folder: {TermColors.BOLD}{folder_path}".ljust(col_width)[:col_width] + " │" + TermColors.ENDC)
+    print(TermColors.OKGREEN + f"│ URL: {TermColors.UNDERLINE}{url}".ljust(col_width)[:col_width] + " │" + TermColors.ENDC)
+    print(TermColors.OKGREEN + f"│ Scan this QR code for mobile access:".ljust(col_width) + " │" + TermColors.ENDC)
+    print(TermColors.OKGREEN + "└" + "─" * col_width + "┘" + TermColors.ENDC)
     qrcode_terminal.draw(url)
 
     with ReusableTCPServer(("", port), handler) as httpd:
