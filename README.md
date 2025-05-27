@@ -1,55 +1,68 @@
+          
+                                                           
+            ______ ______________  __ ____   _____   ____  
+           /  ___// __ \_  __ \  \/ // __ \ /     \_/ __ \ 
+           \___ \\  ___/|  | \/\   /\  ___/|  Y Y  \  ___/ 
+          /____  >\___  >__|    \_/  \___  >__|_|  /\___  >
+               \/     \/                 \/      \/     \/ 
+          
+![PyPI](https://img.shields.io/pypi/v/serveme?color=blue)
+![Python Version](https://img.shields.io/pypi/pyversions/serveme)
+![License](https://img.shields.io/github/license/anilrajrimal1/serveme?color=green)
+![GitHub Release](https://img.shields.io/github/v/release/anilrajrimal1/serveme?color=purple)
+![Downloads](https://img.shields.io/pypi/dm/serveme?color=orange)
+
 # serveme
 
-Instantly serve any folder over HTTP with zero configuration, mobile-friendly access, and downloadable folders.
-
-![demo](https://user-images.githubusercontent.com/placeholder/demo.gif)
+Effortlessly serve any folder over HTTP with **zero configuration**, featuring a mobile-friendly web interface, QR code access, and downloadable folders as ZIP files. Perfect for developers, testers, and anyone needing to share files quickly.
 
 ## Features
 
-- Serve any folder instantly over HTTP
-- Automatically detects local IP address
-- Prints QR code in terminal for mobile access
-- Download entire folders as ZIP files
-- Download individual files via browser
-- Zero configuration CLI tool
-- Clean web UI and terminal output
+- **Instant HTTP Server**: Serve any folder with a single command.
+- **Automatic IP Detection**: Works seamlessly on your local network.
+- **Mobile-Friendly**: Access via QR code or URL on any device.
+- **Download Folders as ZIP**: Easily share entire directories.
+- **Individual File Downloads**: Grab single files directly from the browser.
+- **Clean Web UI**: Responsive, intuitive interface for all devices.
+- **Zero Config CLI**: No setup, just run and share.
+- **Elegant Terminal Output**: Clear URLs and QR codes for quick access.
 
 ## Installation
 
-Install the required package:
-
-```bash
-pip install qrcode-terminal
-```
-
-Clone this repository:
-
-```bash
-git clone https://github.com/anilrajrimal1/serveme.git
-cd serveme
-```
-
-Or install directly from PyPI:
+Install `serveme` directly from PyPI:
 
 ```bash
 pip install serveme
 ```
 
+Alternatively, clone the repository for development:
+
+```bash
+git clone https://github.com/anilrajrimal1/serveme.git
+cd serveme
+```
+### Dependencies
+
+- Requires `qrcode-terminal` for QR code generation:
+  ```bash
+  pip install qrcode-terminal
+  ```
+
 ## Usage
 
-From the root of the directory you want to serve:
+Serve the current directory:
 
 ```bash
 serveme
 ```
 
-Or specify a folder and a port:
+Serve a specific folder on a custom port:
 
 ```bash
 serveme /path/to/folder -p 9000
 ```
 
-### Output:
+### Example Output
 
 ```text
 +------------------------------------------------------------+
@@ -59,33 +72,55 @@ serveme /path/to/folder -p 9000
 +------------------------------------------------------------+
 ```
 
-Then open the URL in any browser or scan the QR code.
+Open the URL in a browser or scan the QR code on your mobile device.
 
-## Web UI
+## Web Interface
 
-- Clean table view of files/folders
-- Download buttons for each file and folder
-- Mobile responsive layout
+- **Table View**: Clean, organized display of files and folders.
+- **Download Options**: Buttons for downloading files or entire folders as ZIP.
+- **Responsive Design**: Optimized for desktops, tablets, and phones.
 
 ## CLI Options
 
-| Option         | Description                         |
-|----------------|-------------------------------------|
-| `FOLDER`       | Folder to serve (default is `.`)    |
-| `-p`, `--port` | Port to use (default is `8080`)     |
+| Option         | Description                           | Default       |
+|----------------|---------------------------------------|---------------|
+| `FOLDER`       | Folder to serve                       | Current (`.`) |
+| `-p`, `--port` | Port for the server                   | `8080`        |
 
 ## Graceful Shutdown
 
-Press `Ctrl+C` to stop the server cleanly.
+Stop the server cleanly with `Ctrl+C`.
 
 ## Development
 
-To run locally:
+To run locally for development:
 
 ```bash
 python serveme.py
 ```
 
+### Contributing
+
+We welcome contributions! To get started:
+
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feat/name-your-feature`).
+3. Commit your changes (`git commit -m 'add amazing feature'`).
+4. Push to the branch (`git push origin feat/name-your-feature`).
+5. Open a Pull Request.
+
+## Releases
+
+Check out the [Releases](https://github.com/anilrajrimal1/serveme/releases) page for the latest updates, changelogs, and version history.
+
+- **Latest Release**: [v1.0.0](https://github.com/anilrajrimal1/serveme/releases/latest)
+- Available on [PyPI](https://pypi.org/project/serveme/).
+
 ## License
 
-MIT License. ©️ 2025 Anil Raj Rimal
+Distributed under the MIT License. © 2025 Anil Raj Rimal. See [LICENSE](LICENSE) for more information.
+
+## Acknowledgments
+
+- Built with 💖 by [Anil Raj Rimal](https://github.com/anilrajrimal1).
+- Powered by Python and open-source libraries.
