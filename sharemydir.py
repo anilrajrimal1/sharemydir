@@ -8,8 +8,9 @@ import os
 import io
 import urllib.parse
 import zipfile
-import qrcode_terminal
 import datetime
+import qrcode
+
 
 class TermColors:
     HEADER = '\033[95m'
@@ -22,6 +23,7 @@ class TermColors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+
 def get_local_ip():
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
@@ -29,6 +31,19 @@ def get_local_ip():
             return s.getsockname()[0]
     except Exception:
         return "127.0.0.1"
+
+
+def print_qr_code(url):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=1,
+        border=1,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+    qr.print_ascii(invert=True)
+
 
 class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
@@ -156,6 +171,7 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     font-size: 0.9em;
     color: #666;
     background: #eee;
+    margin-top: auto;
   }}
 </style>
 </head>
@@ -198,7 +214,6 @@ class DownloadableHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             else:
                 size_display = sizeof_fmt(stat.st_size)
                 icon = '<span class="icon file">📄</span>'
-                # Add download button for files linking to file URL directly
                 file_link = urllib.parse.quote(name)
                 r.append(f'<tr>'
                          f'<td>{icon}<a href="{file_link}">{name}</a></td>'
@@ -224,15 +239,18 @@ sharemydir &copy; 2025
         self.end_headers()
         return io.BytesIO(encoded)
 
+
 def sizeof_fmt(num, suffix="B"):
-    for unit in ["","K","M","G","T","P","E","Z"]:
+    for unit in ["", "K", "M", "G", "T", "P", "E", "Z"]:
         if abs(num) < 1024.0:
             return f"{num:3.1f} {unit}{suffix}"
         num /= 1024.0
     return f"{num:.1f} Y{suffix}"
 
+
 class ReusableTCPServer(socketserver.TCPServer):
     allow_reuse_address = True
+
 
 def serve(directory, port):
     os.chdir(directory)
@@ -242,14 +260,14 @@ def serve(directory, port):
     url = f"http://{local_ip}:{port}/"
     folder_path = os.path.abspath(directory)
 
-    # Fix CLI table width and align columns nicely
     col_width = 60
     print(TermColors.OKGREEN + "┌" + "─" * col_width + "┐" + TermColors.ENDC)
     print(TermColors.OKGREEN + f"│ Serving folder: {TermColors.BOLD}{folder_path}".ljust(col_width)[:col_width] + " │" + TermColors.ENDC)
     print(TermColors.OKGREEN + f"│ URL: {TermColors.UNDERLINE}{url}".ljust(col_width)[:col_width] + " │" + TermColors.ENDC)
     print(TermColors.OKGREEN + f"│ Scan this QR code for mobile access:".ljust(col_width) + " │" + TermColors.ENDC)
     print(TermColors.OKGREEN + "└" + "─" * col_width + "┘" + TermColors.ENDC)
-    qrcode_terminal.draw(url)
+
+    print_qr_code(url)
 
     with ReusableTCPServer(("", port), handler) as httpd:
         try:
@@ -258,6 +276,7 @@ def serve(directory, port):
             print("\nShutting down server...")
             httpd.shutdown()
 
+
 def main():
     parser = argparse.ArgumentParser(description="Serve a folder over HTTP with downloadable folders as ZIPs.")
     parser.add_argument("folder", nargs="?", default=".", help="Folder to serve (default current directory)")
@@ -265,6 +284,7 @@ def main():
 
     args = parser.parse_args()
     serve(args.folder, args.port)
+
 
 if __name__ == "__main__":
     main()
