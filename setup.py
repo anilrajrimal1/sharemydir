@@ -9,7 +9,6 @@ setup(
     author="Anil Raj Rimal",
     author_email="anilrajrimal@gmail.com",
     readme = "README.md",
-    license = { text = "MIT" },
     url="https://github.com/anilrajrimal1/sharemydir",
     py_modules=["sharemydir"],
     install_requires=[
