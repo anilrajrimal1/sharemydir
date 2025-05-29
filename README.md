@@ -105,7 +105,7 @@ We welcome contributions! To get started:
 
 Check out the [Releases](https://github.com/anilrajrimal1/sharemydir/releases) page for the latest updates, changelogs, and version history.
 
-- **Latest Release**: [v1.0.1](https://github.com/anilrajrimal1/sharemydir/releases/latest)
+- **Latest Release**: [v1.0.2](https://github.com/anilrajrimal1/sharemydir/releases/latest)
 - Available on [PyPI](https://pypi.org/project/sharemydir/).
 
 ## License
