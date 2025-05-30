@@ -19,6 +19,9 @@ Effortlessly serve any folder over HTTP with **zero configuration**, featuring a
 - **Zero Config CLI**: No setup, just run and share.
 - **Elegant Terminal Output**: Clear URLs and QR codes for quick access.
 
+## Demo
+![sharemydir-demo](https://github.com/user-attachments/assets/1585ee4b-0d05-48b7-bd55-862650a96ed8)
+
 ## Installation
 
 Install `sharemydir` directly from PyPI:
