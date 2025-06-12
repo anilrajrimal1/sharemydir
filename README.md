@@ -1,12 +1,20 @@
-# sharemydir
-        
-![PyPI](https://img.shields.io/pypi/v/sharemydir?color=blue)
-![Python Version](https://img.shields.io/pypi/pyversions/sharemydir)
-![License](https://img.shields.io/github/license/anilrajrimal1/sharemydir?color=green)
-![GitHub Release](https://img.shields.io/github/v/release/anilrajrimal1/sharemydir?color=purple)
-![Downloads](https://img.shields.io/pypi/dm/sharemydir?color=orange)
+<div align="center">
+  <h1>ShareMyDir</h1>
+  <p>Effortlessly serve any folder over HTTP with zero configuration.</p>
+  <p>Mobile-friendly interface, QR code access, and downloadable folders as ZIP files.</p>
+</div>
 
-Effortlessly serve any folder over HTTP with **zero configuration**, featuring a mobile-friendly web interface, QR code access, and downloadable folders as ZIP files. Perfect for developers, testers, and anyone needing to share files quickly.
+</br>
+
+<!-- prettier-ignore-start -->
+<div align="center">
+
+| **PyPI**                                                                                  | **Python Version**                                                                     | **License**                                                                                                     | **GitHub Release**                                                                                                     | **Downloads**                                                                        |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| [![PyPI](https://img.shields.io/pypi/v/sharemydir?color=blue)](https://pypi.org/project/sharemydir/) | [![Python Version](https://img.shields.io/pypi/pyversions/sharemydir)](https://pypi.org/project/sharemydir/) | [![License](https://img.shields.io/github/license/anilrajrimal1/sharemydir?color=green)](https://github.com/anilrajrimal1/sharemydir/blob/main/LICENSE) | [![GitHub Release](https://img.shields.io/github/v/release/anilrajrimal1/sharemydir?color=purple)](https://github.com/anilrajrimal1/sharemydir/releases) | [![Downloads](https://img.shields.io/pypi/dm/sharemydir?color=orange)](https://pypi.org/project/sharemydir/) |
+
+</div>
+
 
 ## Features
 
